@@ -17,6 +17,39 @@
     <script src="mdl/material.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     
+    
+    <script type="text/javascript">
+    	$(document).ready(function(){
+             $("img").css({"height":"100px","width":"100px","cursor":"pointer"});
+    			//for selecting and deselecting all pcs
+    			$("#selectall").click(function(){
+       				if($("img").hasClass('selectimg')) {
+       					 $("img").removeClass('selectimg');
+   						 } else {
+       					 $("img").addClass('selectimg');
+   					 }	 
+    			});
+    			// for selecting and deselecting a pc
+    			$("img").click(function(){
+    				if($(this).hasClass('selectimg')) {
+       					 $(this).removeClass('selectimg');
+   						 } else {
+       					 $(this).addClass('selectimg');
+   					 }
+    			});
+    			//checking if the pc is selected or not
+    			$(".mdl-button--primary").click(function(){
+    				if($("img").hasClass('selectimg')){
+    					alert("do you want to continue?");
+    				}else{
+    					alert("select atleast one pc");
+    				}
+    				
+    				
+    			});
+    	});
+    	
+    </script>
 
 <style type="text/css">
 body{
@@ -73,6 +106,12 @@ body{
         display: block;
         
     }
+    .selectimg{
+    	border-radius: 50%;
+    	border:5px solid #607D8B;
+        opacity: 0.6;
+    	
+    }
 
 	
 </style>
@@ -86,60 +125,61 @@ body{
     <div class="FirstHalf">
     		<div class="container">
                 		<div id="selection">
-         					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Select All</button>
+         					<button id="selectall" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Select All</button>
          				</div>
                 <ul>
         		 <li id="pc_name" class="figures" >
-            		<img src="images/pc.ico" height="100px" width="100px" hspace="30" alt="" class="figure"/>
+            		<img src="images/pc.ico" alt="" hspace="30" class="figure"/>
             		<span class="figcaption">pc_name</span>
        			 </li>
        			 <li id="pc_name" class="figures" >
-            		<img src="images/pc.ico" height="100px" width="100px" hspace="30" alt="" class="figure"/>
+            		<img src="images/pc.ico" alt="" hspace="30" class="figure"/>
             		<span class="figcaption">pc_name</span>
         		</li>
         		<li id="pc_name" class="figures" >
-            		<img src="images/pc.ico" height="100px" width="100px" hspace="30" alt="" class="figure"/>
+            		<img src="images/pc.ico"  alt="" hspace="30" class="figure"/>
             		<span class="figcaption">pc_name</span>
         		</li>
         		<li id="pc_name" class="figures" >
-            		<img src="images/pc.ico" height="100px" width="100px" hspace="30" alt="" class="figure"/>
+            		<img src="images/pc.ico"  alt="" hspace="30" class="figure"/>
             		<span class="figcaption">pc_name</span>
         		</li>
 
         		<li id="pc_name" class="figures" >
-            		<img src="images/pc.ico" height="100px" width="100px" hspace="30" alt="" class="figure"/>
+            		<img src="images/pc.ico"  alt="" hspace="30" class="figure"/>
             		<span class="figcaption">pc_name</span>
         		</li>
         		<li id="pc_name" class="figures" >
-           		 	<img src="images/pc.ico" height="100px" width="100px" hspace="30" alt="" class="figure"/>
+           		 	<img src="images/pc.ico"  alt="" hspace="30" class="figure"/>
             		<span class="figcaption">pc_name</span>
         		</li>
         		<div style="height:20px;"></div>
         		<li id="pc_name" class="figures" >
-            		<img src="images/pc.ico" height="100px" width="100px" hspace="30" alt="" class="figure"/>
+            		<img src="images/pc.ico"  alt="" hspace="30" class="figure"/>
             		<span class="figcaption">pc_name</span>
        			 </li>
        			 <li id="pc_name" class="figures" >
-            		<img src="images/pc.ico" height="100px" width="100px" hspace="30" alt="" class="figure"/>
+            		<img src="images/pc.ico"  alt="" hspace="30" class="figure"/>
             		<span class="figcaption">pc_name</span>
         		</li>
         		<li id="pc_name" class="figures" >
-            		<img src="images/pc.ico" height="100px" width="100px" hspace="30" alt="" class="figure"/>
+            		<img src="images/pc.ico"  alt="" hspace="30" class="figure"/>
             		<span class="figcaption">pc_name</span>
         		</li>
         		<li id="pc_name" class="figures" >
-            		<img src="images/pc.ico" height="100px" width="100px" hspace="30" alt="" class="figure"/>
+            		<img src="images/pc.ico"  alt="" hspace="30" class="figure"/>
             		<span class="figcaption">pc_name</span>
         		</li>
 
         		<li id="pc_name" class="figures" >
-            		<img src="images/pc.ico" height="100px" width="100px" hspace="30" alt="" class="figure"/>
+            		<img src="images/pc.ico"  alt="" hspace="30" class="figure"/>
             		<span class="figcaption">pc_name</span>
         		</li>
         		<li id="pc_name" class="figures" >
-           		 	<img src="images/pc.ico" height="100px" width="100px" hspace="30" alt="" class="figure"/>
+           		 	<img src="images/pc.ico"  alt="" hspace="30" class="figure"/>
             		<span class="figcaption">pc_name</span>
         		</li>
+        		
     			</ul>
     		</div>
     </div>
