@@ -6,17 +6,17 @@ import java.util.*;
 
 class clients{
 	public static void main(String args[]) {
-		Socket soc ;
-		PrintStream ps;
-		BufferedReader dis;
-		String sdate;
-		String cmd=null;
+		Socket cs ;		
 		Process proc;
 		try {
-			soc = new Socket("127.0.0.255",4444);
-			dis= new BufferedReader(new InputStreamReader(soc.getInputStream()));
-			sdate = dis.readLine();
-			System.out.println("the date/time on server is:"+ sdate);
+			cs = new Socket("127.0.0.255",4444);
+			BufferedReader in= new BufferedReader(new InputStreamReader(cs.getInputStream()));
+			BufferedOutputStream out = new BufferedOutputStream(cs.getOutputStream());
+			String id = in.readLine();
+			System.out.println("unique id is:"+ id);
+			String cmd="cmd";
+			out.write(cmd.getBytes());
+			out.flush();
 		} catch(IOException e) {
 			System.out.println("the exception is:"+e);
 		}

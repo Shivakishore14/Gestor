@@ -1,4 +1,4 @@
-package gestor;
+package gestor.client;
 
 import java.net.*;
 import java.io.*;
@@ -12,13 +12,11 @@ public class server {
 		BufferedReader dis;
 		try	{
 			ss = new ServerSocket(4444);
-			System.out.println("Server ready...");
+			System.out.println("Slave system ready...");
 			while(true) {
 				cs = ss.accept();
 				System.out.println("Accepted");
 				clientInstance cI = new clientInstance(cs);
-				cI.fun();
-				cI.run();
 				cI.start();
 			}
 		} catch(IOException e) {
@@ -32,16 +30,19 @@ class clientInstance extends Thread {
 	public clientInstance(Socket s) {
 		cs = s;
 	}
-	public void fun(){
-		System.out.println("fun");
-	}
+        private String process(String recv){
+        
+            return recv;
+        }
 	public void run() {
 		try {
-			System.out.println("Client connected");
 			BufferedOutputStream out = new BufferedOutputStream(cs.getOutputStream());
-			byte[] cmd = "message from server \n".getBytes();
+			BufferedReader in = new BufferedReader(new InputStreamReader(cs.getInputStream()));
+			byte[] cmd = "YYYSSddd uniq id\n".getBytes();
 			out.write(cmd, 0, cmd.length);
 			out.flush();
+			String recv = in.readLine();
+			String result = process(recv);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

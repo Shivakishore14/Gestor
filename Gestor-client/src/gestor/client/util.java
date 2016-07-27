@@ -1,4 +1,4 @@
-package gestor;
+package gestor.client;
 
 import java.io.*;
 import java.util.Date;
