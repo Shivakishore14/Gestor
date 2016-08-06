@@ -51,4 +51,17 @@ public class util {
 	}
 	return 1;
     }
+    public static ArrayList<String> getClient(){
+	String query = "select ip from clients;";
+	ArrayList<String> ip = new ArrayList<String>();
+	try(Connection con = DriverManager.getConnection(DB_URL,USER,PASS); Statement stmt = con.createStatement()) {
+	    ResultSet rs = stmt.executeQuery(query);
+	    while (rs.next()){
+		ip.add(rs.getString("ip"));
+	    }
+	}catch(Exception e){
+	    e.printStackTrace();
+	}
+	return ip;
+    }
 }
