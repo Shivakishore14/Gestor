@@ -9,6 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!--fonts-->
     <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
    
     <!-- material design-->
     <link rel="stylesheet" href="mdl/material.min.css">
@@ -99,7 +100,8 @@ body{
     font-size: 25px;
     display: inline-block;
     margin-left: 40px;
-    font-family: pacifico;
+    font-family: 'Slabo 27px', serif;
+    font-weight: bold;
     }
 
     .figures img{
@@ -112,6 +114,7 @@ body{
         opacity: 0.6;
     	
     }
+
 
 	
 </style>
@@ -188,53 +191,47 @@ body{
 	<div class="SecondHalf">
 			<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
   				<div class="mdl-tabs__tab-bar mdl-typography--display-2">
-      				<a href="#panel1" class="mdl-tabs__tab is-active mdl-cell mdl-cell--4" style="text-decoration: none;color:#FFFFFF">Features</a>
-      				<a href="#panel2" class="mdl-tabs__tab mdl-cell mdl-cell--4" style="text-decoration: none;color:#FFFFFF;">Features</a>
-      				<a href="#panel3" class="mdl-tabs__tab mdl-cell mdl-cell--4" style="text-decoration: none;color:#FFFFFF;">Features</a>
+      				<a href="#panel1" class="mdl-tabs__tab is-active mdl-cell mdl-cell--3" style="text-decoration: none;color:#FFFFFF;">Control</a>
+      				<a href="#panel2" class="mdl-tabs__tab mdl-cell mdl-cell--3" style="text-decoration: none;color:#FFFFFF;">Monitor</a>
+      				<a href="#panel3" class="mdl-tabs__tab mdl-cell mdl-cell--3" style="text-decoration: none;color:#FFFFFF;">Update</a>
+      				<a href="#panel4" class="mdl-tabs__tab mdl-cell mdl-cell--3" style="text-decoration: none;color:#FFFFFF;">Modify</a>
   				</div>
 
   				<div class="mdl-tabs__panel is-active" id="panel1" style="padding-left:180px;">
   				    <div style="height:30px;"></div>
   				    <div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Shutdown</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Restart</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Log Off</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Hibernate</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Proxy</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">FireWall</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Install Services</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
-    		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
-    		       	<div class="divider"></div>
+    		       	
+    		       	
+    		       	
     		       	</div>
     		       	<div style="height:30px;"></div>
     		       	<div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">File Transfer</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Disk partition</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Schedule Tasks</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Management Console</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Change Volume Label</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
-    		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
-    		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
-    		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Button</button>
-    		       	<div class="divider"></div>
+    		       	
+    		       	
     		       	</div>
 
     		       	
