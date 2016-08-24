@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 /**
  * This is the entry class of the server
  */
-public class ServerInitiator {
+public class ServerInitiator extends Thread {
     //Main server frame
     private JFrame frame = new JFrame();
     //JDesktopPane represents the main container that will contain all
@@ -20,7 +20,9 @@ public class ServerInitiator {
 
     int port=9008;
     ServerInitiator(int p){
-	port=p;
+	this.port=p;
+    }
+    public void run(){
 	initialize(port);
     }
    /* public static void main(String args[]){

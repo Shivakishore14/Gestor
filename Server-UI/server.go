@@ -8,12 +8,12 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"os"
 )
 
 var database = "gestor"
 var user = "test"
 var password = "test"
+var clientPort = "9001"
 
 type sysCmd struct {
 	Ip  []string `json:"ip"`
@@ -46,42 +46,74 @@ func dBData() bool {
 	}
 	return false
 }
-func sendToJava() {
-	strEcho := "Hello\n"
+func sendToJava(s string) (bool, string){
+	s = s + "\n" 
 	servAddr := "localhost:4444"
 	tcpAddr, err := net.ResolveTCPAddr("tcp", servAddr)
 	if err != nil {
 		println("ResolveTCPAddr failed: ", err.Error())
-		os.Exit(1)
+		return false, ""
 	}
 
 	conn, err := net.DialTCP("tcp", nil, tcpAddr)
+	defer conn.Close()	
 	if err != nil {
 		println("Dial failed: ", err.Error())
-		os.Exit(1)
+		return false, ""
 	}
 
-	_, err = conn.Write([]byte(strEcho))
+	_, err = conn.Write([]byte(s))
 	if err != nil {
 		println("Write to server failed: ", err.Error())
-		os.Exit(1)
+		return false, ""
 	}
-
-	println("write to server = ", strEcho)
 
 	reply := make([]byte, 1024)
 	_, err = conn.Read(reply)
 
 	if err != nil {
 		println("Write to server failed: ", err.Error())
-		os.Exit(1)
+		return false, ""
 	}
 
 	println("reply from server= ", string(reply))
-
-	conn.Close()
+	return true, string(reply)
+	
 }
+func sendToClient(ip string, cmd string) (bool, string){
+	cmd = cmd + "\n"
+	servAddr := ip+ ":" +clientPort
+	tcpAddr, err := net.ResolveTCPAddr("tcp", servAddr)
+	if err != nil {
+		println("ResolveTCPAddr failed: ", err.Error())
+		return false, ""
+	}
 
+	conn, err := net.DialTCP("tcp", nil, tcpAddr)
+	defer conn.Close()	
+	if err != nil {
+		println("Dial failed: ", err.Error())
+		return false, ""
+	}
+
+	_, err = conn.Write([]byte(cmd))
+	if err != nil {
+		println("Write to server failed: ", err.Error())
+		return false, ""
+	}
+
+	reply := make([]byte, 1024)
+	_, err = conn.Read(reply)
+
+	if err != nil {
+		println("Write to server failed: ", err.Error())
+		return false, ""
+	}
+
+	println("reply from server= ", string(reply))
+	return true, string(reply)
+	
+}
 //http handlers
 func getHandler(w http.ResponseWriter, r *http.Request) {
 	s := "<li class=\"figures\" > <img src=\"images/pc.ico\" alt=\"%s\" onclick=\"javascript:imgClicked(this)\" hspace=\"30\" class=\"figure\"/><span class=\"figcaption\"> %s </span></li>"
@@ -115,8 +147,19 @@ func sendHandler(w http.ResponseWriter, r *http.Request) {
 	djson := r.FormValue("data")
 	c := sysCmd{}
 	json.Unmarshal([]byte(djson), &c)
-	fmt.Printf(c.Cmd)
-	fmt.Fprintf(w, "sk")
+	reply := ""
+	for i:=0 ; i < len(c.Ip); i++ {
+		ip := c.Ip[i]
+		noErr, tempReply := sendToClient(ip,c.Cmd)
+		if !noErr {
+			tempReply = "Error connecting Please check Logs"
+		}
+		reply = reply + "<div class=\"resultIp\">" + ip + "</div> <div class=\"replyBody\">"+tempReply+"</div> <br>"
+	}
+	if reply == "" {
+		reply = "<b>select pc<b>"
+	}
+	fmt.Fprintf(w, reply)
 }
 func main() {
 	fmt.Print(dBData())

@@ -20,12 +20,15 @@ class client{
 					String ip = ia.getHostAddress();
 					if(ip.indexOf('.') == -1)
 					    continue;
+					System.out.println(ip);
 					String subnet = getSubnet(ip);
 					for (int i=1;i<255;i++){
 						String host=subnet + "." + i;
+						System.out.println(host);
 						try {
 							cs = new Socket(host, PORT);
 							String id = handleSoc(cs);
+							System.out.println(ip);
 							if ( id != null) {
 								util.newClient(ip, id);
 								ipaddress.add(ip);

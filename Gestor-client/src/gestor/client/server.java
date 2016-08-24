@@ -12,7 +12,9 @@ public class server {
 		PrintStream ps;
 		BufferedReader dis;
 		try	{
-			ss = new ServerSocket(9009);
+
+			ss = new ServerSocket(9001);
+
 			while(true) {
 				cs = ss.accept();
 				clientInstance cI = new clientInstance(cs);
@@ -33,10 +35,22 @@ class clientInstance extends Thread {
         	System.out.println(recv);
 		try {
 			String a[] = recv.split("::");
-			if (a[0].equals("0"){
+			if (a[0].equals("0")){//remote desktop
 				String ip = a[1];
 				new ClientInitiator(ip,9008).start();			
-			}		
+			}
+			if (a[1].equals("1")){
+				//code to execute shutdown
+			}
+			if (a[1].equals("2")){
+				//code to execute logoff
+			}
+			if (a[1].equals("3")){
+				//code to execute proxy
+			}
+			if (a[1].equals("4")){
+				//code to execute firewall
+			}
 		}
         	return recv;
         }
@@ -49,6 +63,7 @@ class clientInstance extends Thread {
 			byte[] br = (result+"\n").getBytes();
 			out.write(br, 0, br.length);
 			out.flush();
+			cs.close();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
