@@ -21,12 +21,17 @@ import javax.swing.JOptionPane;
  * This class is responsible for connecting to the server
  * and starting ScreenSpyer and ServerDelegate classes
  */
-public class ClientInitiator {
+public class ClientInitiator extends Thread {
 
     Socket socket = null;
-
+    String ip;
+    int port;
     ClientInitiator(String ip, int port) {
-	initialize(ip, port);
+	this.ip = ip;
+	this.port = port;
+    }
+    public void run(){
+	initialize();
     }
    /* public static void main(String[] args){
         String ip = JOptionPane.showInputDialog("Please enter server IP");
@@ -34,7 +39,7 @@ public class ClientInitiator {
         new ClientInitiator().initialize(ip, Integer.parseInt(port));
     }*/
 
-    public void initialize(String ip, int port ){
+    public void initialize(){
 
         Robot robot = null; //Used to capture the screen
         Rectangle rectangle = null; //Used to represent screen dimensions

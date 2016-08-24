@@ -18,7 +18,7 @@ public class ServerInitiator {
     //connected clients' screens
     private JDesktopPane desktop = new JDesktopPane();
 
-    int port;
+    int port=9008;
     ServerInitiator(int p){
 	port=p;
 	initialize(port);
