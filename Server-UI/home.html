@@ -42,9 +42,12 @@
 			
 			
 		});
-	$("#btnShutDown").on("click",function(){
-		sendCmd("0::127.0.0.1");
-	});
+		$("#btnShutDown").on("click",function(){
+			sendCmd("1::20");
+		});
+		$("#btnRemoteDesktop").on("click", function(){
+			sendCmd("0::<ip>");
+		});
 		
     	});
 	function reloadSys(){
@@ -198,7 +201,7 @@ body{
     		       	<div class="divider"></div>
     		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">FireWall</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Install Services</button>
+    		       	<button id="btnRemoteDesktop" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Remote Desktop</button>
     		       	<div class="divider"></div>
     		       	
     		       	
