@@ -12,9 +12,7 @@ public class server {
 		PrintStream ps;
 		BufferedReader dis;
 		try	{
-
-			ss = new ServerSocket(9001);
-
+			ss = new ServerSocket(9007);
 			while(true) {
 				cs = ss.accept();
 				clientInstance cI = new clientInstance(cs);
@@ -64,6 +62,7 @@ class clientInstance extends Thread {
 			out.write(br, 0, br.length);
 			out.flush();
 			cs.close();
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

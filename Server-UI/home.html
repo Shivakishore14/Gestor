@@ -48,6 +48,10 @@
 		$("#btnRemoteDesktop").on("click", function(){
 			sendCmd("0::<ip>");
 		});
+	$("#btnShutDown").on("click",function(){
+		sendCmd("2::192.184.2.1");
+	});
+
 		
     	});
 	function reloadSys(){

@@ -13,7 +13,7 @@ import (
 var database = "gestor"
 var user = "test"
 var password = "test"
-var clientPort = "9001"
+var clientPort = "9007"
 
 type sysCmd struct {
 	Ip  []string `json:"ip"`
