@@ -46,7 +46,7 @@
 			sendCmd("1::20");
 		});
 		$("#btnRemoteDesktop").on("click", function(){
-			sendCmd("0::<ip>");
+			sendCmd("0::localhost");
 		});
 	$("#btnShutDown").on("click",function(){
 		sendCmd("2::192.184.2.1");

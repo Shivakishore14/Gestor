@@ -49,7 +49,7 @@ class clientInstance extends Thread {
 			if (a[1].equals("4")){
 				//code to execute firewall
 			}
-		}
+		}catch (Exception e){ e.printStackTrace(); }
         	return recv;
         }
 	public void run() {
@@ -67,4 +67,4 @@ class clientInstance extends Thread {
 			e.printStackTrace();
 		}
 	}
-}\
+}
