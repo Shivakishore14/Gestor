@@ -5,8 +5,8 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-public class server1 {
-	public static void main(String args[]) {
+public class server1 extends Thread{
+	public void run() {
 		ServerSocket ss = null;
 		Socket cs ;
 		PrintStream ps;
@@ -17,7 +17,7 @@ public class server1 {
 			ss = new ServerSocket(9007);
 			while(true) {
 				cs = ss.accept();
-				clientInstance cI = new clientInstance(cs);
+				clientInstance1 cI = new clientInstance1(cs);
 				cI.start();
 			}
 		} catch(IOException e) {
@@ -25,10 +25,10 @@ public class server1 {
 		}
 	}
 }
-class clientInstance extends Thread {
+class clientInstance1 extends Thread {
 	protected Socket cs;
 
-	public clientInstance(Socket s) {
+	public clientInstance1(Socket s) {
 		cs = s;
 	}
         private String process(String recv){
@@ -39,7 +39,7 @@ class clientInstance extends Thread {
 		try {
 			String a[] = recv.split("::");
 			if (a[0].equals("0")){//remote desktop
-				String ip = a[1];
+				String ip = cs.getRemoteSocketAddress().toString();
 				new ClientInitiator(ip,9008).start();			
 			}
 			if (a[0].equals("1")){

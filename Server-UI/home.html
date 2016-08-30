@@ -46,7 +46,7 @@
 			sendCmd("1::20");
 		});
 		$("#btnRemoteDesktop").on("click", function(){
-			sendCmd("0::localhost");
+			sendCmd("0::");
 		});
 	$("#btnShutDown").on("click",function(){
 		sendCmd("2::192.184.2.1");
@@ -155,7 +155,9 @@ body{
         opacity: 0.6;
     	
     }
-
+#mymodal{
+	color:#000	;
+}
 
 	
 </style>
@@ -201,7 +203,7 @@ body{
     		       	<div class="divider"></div>
     		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Hibernate</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Proxy</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary"  data-toggle="modal" data-target="#myModal">Proxy</button>
     		       	<div class="divider"></div>
     		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">FireWall</button>
     		       	<div class="divider"></div>
@@ -277,6 +279,30 @@ body{
 
 	</div>
 <!-- second half ends-->
-
+<!-- Modal -->
+	<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Confirmation</h4>
+				</div>
+				<div class="modal-body">
+					<div id="input1">
+			        		<p>Enter Input1</p>
+						<input type="text" name="input1">
+					</div>
+					<div id="input2">
+						<p>Enter Input2</p>
+						<input type="text" name="Input2">
+					<div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default">Proceed</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Abort</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

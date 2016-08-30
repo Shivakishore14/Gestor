@@ -7,8 +7,12 @@ package gestor.client;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Scanner;
 
 /**
  *
@@ -16,11 +20,14 @@ import java.net.Socket;
  */
 public class UiClient extends javax.swing.JFrame {
 	int port = 9006;
+	tryConnect connecting = new tryConnect();
 	/**
 	 * Creates new form UiClient
 	 */
 	public UiClient() {
 		initComponents();
+		tfPcName.setText(getStoredData("name"));
+		tfServerIp.setText(getStoredData("ip"));
 	}
 
 	/**
@@ -39,6 +46,8 @@ public class UiClient extends javax.swing.JFrame {
         tfPcName = new javax.swing.JTextField();
         tfServerIp = new javax.swing.JTextField();
         labelNotifications = new javax.swing.JLabel();
+        btnConnect = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,6 +70,15 @@ public class UiClient extends javax.swing.JFrame {
             }
         });
 
+        btnConnect.setText("Connect");
+        btnConnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConnectActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Click connect to connect to server");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -82,8 +100,13 @@ public class UiClient extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnConnect)
                     .addComponent(labelTitle)
                     .addComponent(labelNotifications))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -101,9 +124,13 @@ public class UiClient extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelServerIp)
                     .addComponent(tfServerIp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(16, 16, 16)
+                .addComponent(btnConnect)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(labelNotifications)
-                .addContainerGap(71, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addContainerGap())
         );
 
         labelTitle.getAccessibleContext().setAccessibleName("labelTitle");
@@ -113,19 +140,31 @@ public class UiClient extends javax.swing.JFrame {
 
     private void tfPcNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfPcNameActionPerformed
         // TODO add your handling code here:
-		validateData();
+		if(!connecting.isAlive()){
+			connecting.start();
+		}
     }//GEN-LAST:event_tfPcNameActionPerformed
 
     private void tfServerIpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfServerIpActionPerformed
         // TODO add your handling code here:
-		validateData();
+		//System.out.println(getStoredData("ip"));
+		if(!connecting.isAlive()){
+			connecting.start();
+		}
     }//GEN-LAST:event_tfServerIpActionPerformed
+
+    private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
+        // TODO add your handling code here:
+		if(!connecting.isAlive()){
+			connecting.start();
+		}
+    }//GEN-LAST:event_btnConnectActionPerformed
 	
-	private void validateData(){
+	private boolean validateData(){
 		String Ip = tfServerIp.getText();
 		String name = tfPcName.getText();
 		String recv = ""; 
-		labelNotifications.setText("Trying to connect to Server");
+		jLabel1.setText("Trying to connect to Server");
 		try {
 			Socket cs = new Socket(Ip,port);
 			BufferedReader in= new BufferedReader(new InputStreamReader(cs.getInputStream()));
@@ -134,13 +173,49 @@ public class UiClient extends javax.swing.JFrame {
 			out.write(name.getBytes());
 			out.flush();
 			recv = in.readLine();
-		}catch (Exception e){e.printStackTrace();}
+			setStoredData(Ip, name);
+		}catch (Exception e){
+			e.printStackTrace();
+			recv="";
+		}
 		if(recv.equals("")){
-			labelNotifications.setText("Server connection refused");
+			jLabel1.setText("Server connection refused");
+			return false;
 		}else {
-			labelNotifications.setText("Connected to Server");
+			jLabel1.setText("Connected to Server");
+			return true;
 		}
 	}
+	public void setStoredData(String ip,String name){
+		File file = new File("server.cfg");
+        file.delete();
+		String str = String.format("ip=%s\nname=%s",ip,name);
+   		try(FileWriter fw = new FileWriter(file, true)) {
+				fw.write(str);
+		} catch(Exception e) {
+				e.printStackTrace();
+		}
+	}
+	public String getStoredData(String choice) {
+		String temp = "";
+		File file = new File("server.cfg");
+
+                try(Scanner sc = new Scanner(file)) {
+                	while(sc.hasNextLine()) {
+                        	temp = sc.nextLine();
+
+                                if(!temp.startsWith("#") && temp.split("=")[0].equals(choice)) {
+                                        temp = temp.split("=")[1];
+                                        break;
+                                }
+                        }
+                } catch(IOException e) {
+                	e.printStackTrace();
+                }
+
+		return temp;
+	}
+	
 	/**
 	 * @param args the command line arguments
 	 */
@@ -167,7 +242,8 @@ public class UiClient extends javax.swing.JFrame {
 			java.util.logging.Logger.getLogger(UiClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
 		//</editor-fold>
-
+		
+		new server1().start();
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -177,6 +253,8 @@ public class UiClient extends javax.swing.JFrame {
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnConnect;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel labelNotifications;
     private javax.swing.JLabel labelServerIp;
@@ -185,4 +263,17 @@ public class UiClient extends javax.swing.JFrame {
     private javax.swing.JTextField tfPcName;
     private javax.swing.JTextField tfServerIp;
     // End of variables declaration//GEN-END:variables
+	class tryConnect extends Thread{
+		public void run(){
+			while (true){
+				if(validateData()){
+					break;
+				}
+				try{
+					sleep(30000);
+				}catch(InterruptedException e){e.printStackTrace();}
+			}
+		}
+		
+	}
 }

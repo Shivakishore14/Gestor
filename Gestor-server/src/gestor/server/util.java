@@ -33,7 +33,6 @@ public class util {
                 return 1;
             else
                 return 0;
-            
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -63,5 +62,13 @@ public class util {
 	    e.printStackTrace();
 	}
 	return ip;
+    }
+    public static void truncate(){
+	String query = "truncate clients";
+	try(Connection con = DriverManager.getConnection(DB_URL,USER,PASS); Statement stmt = con.createStatement()) {
+	     stmt.executeUpdate(query);
+	}catch(Exception e){
+	    e.printStackTrace();
+	}
     }
 }

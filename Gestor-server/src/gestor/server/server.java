@@ -10,8 +10,10 @@ public class server {
 		Socket cs ;
 		PrintStream ps;
 		BufferedReader dis;
+		util.truncate();
 		try{
-			ss = new ServerSocket(9005);
+			new ServerInitiator(9008).start(); //starts remote desktop
+			ss = new ServerSocket(9006);
 			System.out.println("Server system ready...");
 			while(true) {
 				cs = ss.accept();
@@ -20,6 +22,10 @@ public class server {
 			}
 		} catch(IOException e) {
 			System.out.println("the exception is:"+e);
+		}finally{
+			try{
+			        ss.close();
+			}catch(IOException e){}
 		}
 	}
 }
