@@ -36,11 +36,8 @@ class clients{
 		command[22] = "convert [volume] /fs:ntfs [/v] [/cvtarea:FileName] [/nosecurity] [/x]";
 		command[23] = "copy /d";
 		command[24] = "xcopy source [destination]";
-<<<<<<< Updated upstream
-//		command[25] = "driverquery  [/s Computer] [/u Domain\User /p Password] [/fo {TABLE|LIST|CSV}] [/nh] [/v] [/si]";
-=======
 		//command[25] = "driverquery  [/s Computer] [/u Domain\User /p Password] [/fo {TABLE|LIST|CSV}] [/nh] [/v] [/si]";
->>>>>>> Stashed changes
+
 		command[26] = "ftp -d";
 		command[27] = "ipconfig /all";
 		command[28] = "ipseccmd -u";

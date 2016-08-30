@@ -5,12 +5,17 @@
  */
 package gestor.client;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.Socket;
+
 /**
  *
  * @author root
  */
 public class UiClient extends javax.swing.JFrame {
-
+	int port = 9006;
 	/**
 	 * Creates new form UiClient
 	 */
@@ -50,14 +55,16 @@ public class UiClient extends javax.swing.JFrame {
             }
         });
 
+        tfServerIp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfServerIpActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(labelTitle)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -74,7 +81,9 @@ public class UiClient extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(labelNotifications)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelTitle)
+                    .addComponent(labelNotifications))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -104,8 +113,34 @@ public class UiClient extends javax.swing.JFrame {
 
     private void tfPcNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfPcNameActionPerformed
         // TODO add your handling code here:
+		validateData();
     }//GEN-LAST:event_tfPcNameActionPerformed
 
+    private void tfServerIpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfServerIpActionPerformed
+        // TODO add your handling code here:
+		validateData();
+    }//GEN-LAST:event_tfServerIpActionPerformed
+	
+	private void validateData(){
+		String Ip = tfServerIp.getText();
+		String name = tfPcName.getText();
+		String recv = ""; 
+		labelNotifications.setText("Trying to connect to Server");
+		try {
+			Socket cs = new Socket(Ip,port);
+			BufferedReader in= new BufferedReader(new InputStreamReader(cs.getInputStream()));
+			BufferedOutputStream out = new BufferedOutputStream(cs.getOutputStream());
+			System.out.println("name id is:"+ name);
+			out.write(name.getBytes());
+			out.flush();
+			recv = in.readLine();
+		}catch (Exception e){e.printStackTrace();}
+		if(recv.equals("")){
+			labelNotifications.setText("Server connection refused");
+		}else {
+			labelNotifications.setText("Connected to Server");
+		}
+	}
 	/**
 	 * @param args the command line arguments
 	 */
