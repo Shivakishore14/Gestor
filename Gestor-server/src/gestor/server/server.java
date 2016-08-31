@@ -47,6 +47,9 @@ class clientInstance extends Thread {
 			out.write(info, 0, info.length);
 			out.flush();
 			String ip = cs.getRemoteSocketAddress().toString();
+			String a[] = ip.split(":");
+			System.out.print(a[0]);
+			ip = a[0].substring(1);
 			util.newClient(ip, sysName);
 		} catch(Exception e) {
 			e.printStackTrace();

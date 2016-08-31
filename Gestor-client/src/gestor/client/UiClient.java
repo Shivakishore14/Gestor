@@ -170,6 +170,7 @@ public class UiClient extends javax.swing.JFrame {
 			BufferedReader in= new BufferedReader(new InputStreamReader(cs.getInputStream()));
 			BufferedOutputStream out = new BufferedOutputStream(cs.getOutputStream());
 			System.out.println("name id is:"+ name);
+			name = name +"\n";
 			out.write(name.getBytes());
 			out.flush();
 			recv = in.readLine();

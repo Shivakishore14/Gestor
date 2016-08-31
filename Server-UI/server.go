@@ -44,7 +44,7 @@ func dBData() bool {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return false
+	return true
 }
 func sendToJava(s string) (bool, string){
 	s = s + "\n" 
@@ -83,6 +83,7 @@ func sendToJava(s string) (bool, string){
 func sendToClient(ip string, cmd string) (bool, string){
 	cmd = cmd + "\n"
 	servAddr := ip+ ":" +clientPort
+	reply := ""
 	tcpAddr, err := net.ResolveTCPAddr("tcp", servAddr)
 	if err != nil {
 		println("ResolveTCPAddr failed: ", err.Error())
@@ -95,16 +96,17 @@ func sendToClient(ip string, cmd string) (bool, string){
 		println("Dial failed: ", err.Error())
 		return false, ""
 	}
-
-	_, err = conn.Write([]byte(cmd))
+	
+	bCmd := []byte(cmd)
+	_, err = conn.Write(bCmd)
 	if err != nil {
 		println("Write to server failed: ", err.Error())
 		return false, ""
 	}
-
-	reply := make([]byte, 1024)
-	_, err = conn.Read(reply)
-
+	if (string(bCmd[0]) == "Y") {
+		reply := make([]byte, 1024)
+		_, err = conn.Read(reply)
+	}
 	if err != nil {
 		println("Write to server failed: ", err.Error())
 		return false, ""
