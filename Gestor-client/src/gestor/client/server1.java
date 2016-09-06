@@ -59,40 +59,40 @@ class clientInstance1 extends Thread {
 			String a[] = recv.split("::");
 			if (a[0].equals("Y0")){
 				//code to execute proxy (netsh winhttp set proxy ProxyName:80)(4::<<ip>>)
-				val = "netsh winhttp set proxy";
+				val = "cmd /c netsh winhttp set proxy";
 				cmd = val+" "+a[1]+":80";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y1")){//code to reset proxy
-				cmd = "netsh winhttp reset proxy";
+				cmd = "cmd /c netsh winhttp reset proxy";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y2")){ // code to enable firewall
-				cmd = "netsh advfirewall set currentprofile state on";
+				cmd = "cmd /c netsh advfirewall set currentprofile state on";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y3")){ // code to disable firewall
-				cmd = "netsh advfirewall set currentprofile state off";
+				cmd = "cmd /c netsh advfirewall set currentprofile state off";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y4")){ //(8::<<username>>::<<password>>)
-				val = "net user /add";
+				val = "cmd /c net user /add";
 				cmd = val+" "+a[1]+" "+a[2];
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y5")){  //(9::<<username>>)
-				val = "net user /delete";
+				val = "cmd /c net user /delete";
 				cmd = val+" "+a[1];
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y6")){ //(10::<<username>>::<<password>>)
-				val = "net user";
+				val = "cmd /c net user";
 				cmd = val+" "+a[1]+" "+a[2];
 				String result = executeCmdWithResult(cmd);
 				return result;
@@ -115,18 +115,18 @@ class clientInstance1 extends Thread {
 			}
 			if (a[0].equals("N1")){
 				//code to shutdown i.e logoff current user (01::)	
-				cmd = "shutdown";
+				cmd = "cmd /c shutdown";
 				executeCmd(cmd);
 			}
 			if (a[0].equals("N2")){
 				//code to shutdown with time(2::<<time>>)
-				val = "shutdown -t";
+				val = "cmd /c shutdown -t";
 				cmd = val+" "+a[1];
 				executeCmd(cmd);
 			}
 			if (a[0].equals("N3")){
 				//code to reboot
-				cmd = "shutdown -r";
+				cmd = "cmd /c shutdown -r";
 				executeCmd(cmd);
 			}
 		}catch(Exception e){
@@ -138,10 +138,14 @@ class clientInstance1 extends Thread {
 		System.out.println(cmd);
 		BufferedInputStream procStdout;
 		Process proc;
+		String s = "";
 		try {
 					proc = Runtime.getRuntime().exec(cmd);
               		procStdout = new BufferedInputStream(proc.getInputStream());
-               		procStdout.close();
+               		while( (s= procStdout.readLine())!=null){
+								System.out.println(s);
+					}
+					procStdout.close();
 		}
 		catch(Exception e) {
 			System.out.println("the exception is:"+e);
