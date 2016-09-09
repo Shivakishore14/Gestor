@@ -91,9 +91,62 @@ class clientInstance1 extends Thread {
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
-			if (a[0].equals("Y6")){ //(10::<<username>>::<<password>>)
+			if (a[0].equals("Y16")){ //(10::<<username>>::<<password>>)
 				val = "cmd /c net user";
 				cmd = val+" "+a[1]+" "+a[2];
+				String result = executeCmdWithResult(cmd);
+				return result;
+			}
+			if (a[0].equals("Y6")){ // code to display status of driver
+				cmd = "cmd /c wmic diskdrive get status";
+				String result = executeCmdWithResult(cmd);
+				return result;
+			}
+			if (a[0].equals("Y7")){ // code to show ip
+				cmd = "cmd /c ipconfig /all";
+				String result = executeCmdWithResult(cmd);
+				return result;
+			}
+			if (a[0].equals("Y8")){ // code to display netstat
+				cmd = "cmd /c netstat -n";
+				String result = executeCmdWithResult(cmd);
+				return result;
+			}
+			if (a[0].equals("Y9")){ //chkdsk <<drive_name>>
+				val = "cmd /c chkdsk";
+				cmd = val+""+a[1];
+				String result = executeCmdWithResult(cmd);
+				return result;
+			}
+			if (a[0].equals("Y10")){ //chkntfs <<drive_name>>
+				val = "cmd /c chkntfs";
+				cmd = val+""+a[1];
+				String result = executeCmdWithResult(cmd);
+				return result;
+			}
+			if (a[0].equals("Y11")){ //scan
+				cmd = "cmd /c sfc /SCANNOW";
+				String result = executeCmdWithResult(cmd);
+				return result;
+			}
+			if (a[0].equals("Y12")){ //driver query
+				cmd = "cmd /c driverquery";
+				String result = executeCmdWithResult(cmd);
+				return result;
+			}
+			if (a[0].equals("Y13")){ //systeminfo
+				cmd = "cmd /c systeminfo";
+				String result = executeCmdWithResult(cmd);
+				return result;
+			}
+			if (a[0].equals("Y14")){ // label <<drive_name>>
+				val = "cmd /c label";
+				cmd = val+""+a[1];
+				String result = executeCmdWithResult(cmd);
+				return result;
+			}
+			if (a[0].equals("Y15")){ // compact
+				cmd = "cmd /c compact";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}

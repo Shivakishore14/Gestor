@@ -23,7 +23,7 @@
 	var ips = [];
     	$(document).ready(function(){
 		reloadSys();
-
+		
 		//for selecting and deselecting all pcs
 		$("#selectall").click(function(){
 			
@@ -78,7 +78,40 @@
 		$("#resetProxy").on("click",function(){
 			sendCmd("Y1::");
 		});	
-		
+		$("#driverStatus").on("click",function(){
+			sendCmd("Y6::");
+		});
+		$("#showIp").on("click",function(){
+			sendCmd("Y7::");
+		});
+		$("#netstat").on("click",function(){
+			sendCmd("Y8::");
+		});
+		$("#chkdsk").on("click",function(){
+			sendCmd("Y9::");
+		});
+		$("#chkntfs").on("click",function(){
+			sendCmd("Y10::");
+		});
+		$("#scan").on("click",function(){
+			sendCmd("Y11::");
+		});
+		$("#driverQuery").on("click",function(){
+			sendCmd("Y12::");
+		});
+		$("#systemInfo").on("click",function(){
+			sendCmd("Y13::");
+		});
+		$("#label").on("click",function(){
+			sendCmd("Y14::");
+		});
+		$("#compact").on("click",function(){
+			sendCmd("Y15::");
+		});
+		$("#changePassword").on("click",function(){
+			sendCmd("Y16::");
+		});
+
     	});
 	function reloadSys(){
 		$.post('getSys/', { username:"sk"}, function(result) {
@@ -199,7 +232,7 @@
          				</div>
                 <ul id="DisplayPc">
         		<li id="pc_name" class="figures" >
-            			<img src="images/pc.ico" alt="" hspace="30" class="figure"/>
+            			<img src="images/pc.ico" alt="" hspace="30" class="figure" />
             			<span class="figcaption">pc_name</span>
        			 </li>
     		</ul>
@@ -226,11 +259,11 @@
     		       	<div class="divider"></div>
     		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Hibernate</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Scan</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="scan">Scan</button>
     		       	<div class="divider"></div>    		       	
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Chkdsk</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="chkdsk">Chkdsk</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Chkntfs</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="chkntfs">Chkntfs</button>
     		       	<div class="divider"></div>
     		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Change Volume Label</button>
     		       	<div class="divider"></div>
@@ -239,7 +272,11 @@
     		       	</div>
     		       	<div style="height:30px;"></div>
     		       	<div>
-    		    	
+    		    	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="driverStatus">Driver Status</button>
+    		       	<div class="divider"></div>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="showIp">Show IP</button>
+    		       	<div class="divider"></div>
+
     		       	</div>
 
     		       	
@@ -251,15 +288,15 @@
   				    <div>
     		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="btnRemoteDesktop">Remote Desktop</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Netstat</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="netstat">Netstat</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Driver Query</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="driverQuery">Driver Query</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">System Info</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="systemInfo">System Info</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Label</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="label">Label</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Compact</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="compact">Compact</button>
     		       	<div class="divider"></div>
     		       	
     		       	</div>
@@ -281,7 +318,7 @@
     		       	<div class="divider"></div>
     		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="deleteUser">Delete User</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Change Password</button>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="changePassword">Change Password</button>
     		       	<div class="divider"></div>
 
     		       	</div>
