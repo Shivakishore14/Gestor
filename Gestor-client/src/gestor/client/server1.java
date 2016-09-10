@@ -59,94 +59,94 @@ class clientInstance1 extends Thread {
 			String a[] = recv.split("::");
 			if (a[0].equals("Y0")){
 				//code to execute proxy (netsh winhttp set proxy ProxyName:80)(4::<<ip>>)
-				val = "cmd /c netsh winhttp set proxy";
+				val = "C:\\Windows\\System32\\cmd.exe /c netsh winhttp set proxy";
 				cmd = val+" "+a[1]+":80";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y1")){//code to reset proxy
-				cmd = "cmd /c netsh winhttp reset proxy";
+				cmd = "C:\\Windows\\System32\\cmd.exe /c netsh winhttp reset proxy";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y2")){ // code to enable firewall
-				cmd = "cmd /c netsh advfirewall set currentprofile state on";
+				cmd = "C:\\Windows\\System32\\cmd.exe /c netsh advfirewall set currentprofile state on";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y3")){ // code to disable firewall
-				cmd = "cmd /c netsh advfirewall set currentprofile state off";
+				cmd = "C:\\Windows\\System32\\cmd.exe /c netsh advfirewall set currentprofile state off";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y4")){ //(8::<<username>>::<<password>>)
-				val = "cmd /c net user /add";
+				val = "C:\\Windows\\System32\\cmd.exe /c net user /add";
 				cmd = val+" "+a[1]+" "+a[2];
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y5")){  //(9::<<username>>)
-				val = "cmd /c net user /delete";
+				val = "C:\\Windows\\System32\\cmd.exe /c net user /delete";
 				cmd = val+" "+a[1];
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y16")){ //(10::<<username>>::<<password>>)
-				val = "cmd /c net user";
+				val = "C:\\Windows\\System32\\cmd.exe /c net user";
 				cmd = val+" "+a[1]+" "+a[2];
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y6")){ // code to display status of driver
-				cmd = "cmd /c wmic diskdrive get status";
+				cmd = "C:\\Windows\\System32\\cmd.exe /c wmic diskdrive get status";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y7")){ // code to show ip
-				cmd = "cmd /c ipconfig /all";
+				cmd = "C:\\Windows\\System32\\cmd.exe /c ipconfig /all";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y8")){ // code to display netstat
-				cmd = "cmd /c netstat -n";
+				cmd = "C:\\Windows\\System32\\cmd.exe /c netstat -n";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y9")){ //chkdsk <<drive_name>>
-				val = "cmd /c chkdsk";
+				val = "C:\\Windows\\System32\\cmd.exe /c chkdsk";
 				cmd = val+""+a[1];
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y10")){ //chkntfs <<drive_name>>
-				val = "cmd /c chkntfs";
+				val = "C:\\Windows\\System32\\cmd.exe /c chkntfs";
 				cmd = val+""+a[1];
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y11")){ //scan
-				cmd = "cmd /c sfc /SCANNOW";
+				cmd = "C:\\Windows\\System32\\cmd.exe /c sfc /SCANNOW";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y12")){ //driver query
-				cmd = "cmd /c driverquery";
+				cmd = "C:\\Windows\\System32\\cmd.exe /c driverquery";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y13")){ //systeminfo
-				cmd = "cmd /c systeminfo";
+				cmd = "C:\\Windows\\System32\\cmd.exe /c systeminfo";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y14")){ // label <<drive_name>>
-				val = "cmd /c label";
+				val = "C:\\Windows\\System32\\cmd.exe /c label";
 				cmd = val+""+a[1];
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y15")){ // compact
-				cmd = "cmd /c compact";
+				cmd = "C:\\Windows\\System32\\cmd.exe /c compact";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
@@ -189,15 +189,15 @@ class clientInstance1 extends Thread {
 	}
 	private void executeCmd(String cmd) {
 		System.out.println(cmd);
-		BufferedInputStream procStdout;
+		BufferedReader procStdout;
 		Process proc;
 		String s = "";
 		try {
 					proc = Runtime.getRuntime().exec(cmd);
-              		procStdout = new BufferedInputStream(proc.getInputStream());
-               		while( (s= procStdout.readLine())!=null){
-								System.out.println(s);
-					}
+              		procStdout = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+                    while ((s = procStdout.readLine()) != null){
+                            System.out.println(s);
+                    }
 					procStdout.close();
 		}
 		catch(Exception e) {
@@ -205,19 +205,24 @@ class clientInstance1 extends Thread {
 		}	
 	}
 	private String executeCmdWithResult(String cmd) {
-		System.out.println(cmd);
-		BufferedInputStream procStdout;
-		Process proc;
-		try {
-					proc = Runtime.getRuntime().exec(cmd);
-              		procStdout = new BufferedInputStream(proc.getInputStream());
-               		procStdout.close();
-					return "success";
-		}
-		catch(Exception e) {
-			System.out.println("the exception is:"+e);
-		}	
-		return "";
+	        System.out.println(cmd);
+	        BufferedReader procStdout;
+	        Process proc;
+	        try {
+	                    proc = Runtime.getRuntime().exec(cmd);
+	                    procStdout = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+	                    String s="";
+	                    while ((s = procStdout.readLine()) != null){
+	                            System.out.println(s);
+	                    }
+	                    procStdout.close();
+	                    return "success";
+	        }
+	        catch(Exception e) {	
+		            System.out.println("the exception is:"+e);
+        	}  
+        	return "";
+ 
 	}
 	public void run() {
 		try {
