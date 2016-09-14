@@ -208,15 +208,17 @@ class clientInstance1 extends Thread {
 	        System.out.println(cmd);
 	        BufferedReader procStdout;
 	        Process proc;
+			String result="";
 	        try {
 	                    proc = Runtime.getRuntime().exec(cmd);
 	                    procStdout = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 	                    String s="";
 	                    while ((s = procStdout.readLine()) != null){
 	                            System.out.println(s);
+								result += result + "\n";
 	                    }
 	                    procStdout.close();
-	                    return "success";
+	                    return result;
 	        }
 	        catch(Exception e) {	
 		            System.out.println("the exception is:"+e);

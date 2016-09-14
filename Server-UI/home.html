@@ -139,12 +139,16 @@
 	}
 	function sendCmd(cmd){
 		var jsonData = {};
-		alert("Sa");
 		jsonData["ip"] = ips;
 		jsonData["cmd"] = cmd;
 		var json = JSON.stringify(jsonData);
 		$.post('sendCmd/', { data:json }, function(result) {
-    			alert(result);
+    			//alert(result);
+			if (result != "NONE"){
+				alert(result);
+				//var obj = JSON.parse(result);
+				//alert (obj.ip);			
+			}
 		});
 	}
     </script>

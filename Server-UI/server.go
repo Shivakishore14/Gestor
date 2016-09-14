@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"strings"
 )
 
 var database = "gestor"
@@ -19,7 +20,10 @@ type sysCmd struct {
 	Ip  []string `json:"ip"`
 	Cmd string   `json:"cmd"`
 }
-
+type clientsReply struct {
+	Ip []string `json:id`
+	Reply []string `json:reply`
+}
 func dBData() bool {
 	db, err := sql.Open("mysql", user+":"+password+"@/"+database)
 	if err = db.Ping(); err != nil {
@@ -83,7 +87,7 @@ func sendToJava(s string) (bool, string){
 func sendToClient(ip string, cmd string) (bool, string){
 	cmd = cmd + "\n"
 	servAddr := ip+ ":" +clientPort
-	reply := ""
+	reply := make([]byte, 1024)
 	tcpAddr, err := net.ResolveTCPAddr("tcp", servAddr)
 	if err != nil {
 		println("ResolveTCPAddr failed: ", err.Error())
@@ -104,16 +108,17 @@ func sendToClient(ip string, cmd string) (bool, string){
 		return false, ""
 	}
 	if (string(bCmd[0]) == "Y") {
-		reply := make([]byte, 1024)
 		_, err = conn.Read(reply)
+	}else {
+		reply = []byte("Operation Done");
 	}
 	if err != nil {
 		println("Write to server failed: ", err.Error())
 		return false, ""
 	}
-
-	println("reply from server= ", string(reply))
-	return true, string(reply)
+	finalreply :=  strings.TrimSpace(string(reply))
+	println("reply from server= ", finalreply)
+	return true, finalreply
 	
 }
 //http handlers
@@ -149,19 +154,22 @@ func sendHandler(w http.ResponseWriter, r *http.Request) {
 	djson := r.FormValue("data")
 	c := sysCmd{}
 	json.Unmarshal([]byte(djson), &c)
-	reply := ""
+	reply := make([]string, 0 ,10)
 	for i:=0 ; i < len(c.Ip); i++ {
 		ip := c.Ip[i]
 		noErr, tempReply := sendToClient(ip,c.Cmd)
 		if !noErr {
-			tempReply = "Error connecting Please check Logs"
+			tempReply = "Error connecting (Please check Logs)"
 		}
-		reply = reply + "<div class=\"resultIp\">" + ip + "</div> <div class=\"replyBody\">"+tempReply+"</div> <br>"
+		reply = append(reply, tempReply)
 	}
-	if reply == "" {
-		reply = "<b>select pc<b>"
+	obj := &clientsReply{Ip: c.Ip, Reply:reply}
+	json, _:= json.Marshal(obj)
+	if string(json) == "{}" {
+		fmt.Fprintf(w, "NONE")
+	}else{
+		fmt.Fprintf(w, string(json))
 	}
-	fmt.Fprintf(w, reply)
 }
 func main() {
 	fmt.Print(dBData())
