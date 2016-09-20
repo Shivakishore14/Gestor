@@ -3,6 +3,7 @@ package gestor.client;
 
 import java.net.*;
 import java.io.*;
+import java.nio.CharBuffer;
 import java.util.*;
 
 public class server1 extends Thread{
@@ -50,22 +51,25 @@ class clientInstance1 extends Thread {
 	public clientInstance1(Socket s) {
 		cs = s;
 	}
+	String fname="";
         private String process(String recv){
         	System.out.println(recv);
 			String cmd;
-		String val;
-		
+			String val;
+			fname = recv.replaceAll("::", "_");
 		try {
 			String a[] = recv.split("::");
 			if (a[0].equals("Y0")){
 				//code to execute proxy (netsh winhttp set proxy ProxyName:80)(4::<<ip>>)
-				val = "C:\\Windows\\System32\\cmd.exe /c netsh winhttp set proxy";
-				cmd = val+" "+a[1]+":80";
+				//val = "C:\\Windows\\System32\\cmd.exe /c netsh winhttp set proxy";
+				val = "reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\" /v ProxyServer /t REG_SZ /d";
+				// proxyserveraddress:proxyport /f"
+				cmd = val+" "+a[1]+":80 /f";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
 			if (a[0].equals("Y1")){//code to reset proxy
-				cmd = "C:\\Windows\\System32\\cmd.exe /c netsh winhttp reset proxy";
+				cmd = "reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\" /v ProxyEnable /t REG_DWORD /d 0 /f";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
@@ -103,7 +107,7 @@ class clientInstance1 extends Thread {
 				return result;
 			}
 			if (a[0].equals("Y7")){ // code to show ip
-				cmd = "C:\\Windows\\System32\\cmd.exe /c ipconfig /all";
+				cmd = "C:\\Windows\\System32\\cmd.exe /c ipconfig";
 				String result = executeCmdWithResult(cmd);
 				return result;
 			}
@@ -205,20 +209,23 @@ class clientInstance1 extends Thread {
 		}	
 	}
 	private String executeCmdWithResult(String cmd) {
-	        System.out.println(cmd);
 	        BufferedReader procStdout;
 	        Process proc;
 			String result="";
 	        try {
-	                    proc = Runtime.getRuntime().exec(cmd);
-	                    procStdout = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-	                    String s="";
-	                    while ((s = procStdout.readLine()) != null){
-	                            System.out.println(s);
-								result += result + "\n";
-	                    }
-	                    procStdout.close();
-	                    return result;
+			     
+					proc = Runtime.getRuntime().exec(cmd);
+	                procStdout = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+	                String s="";
+					FileWriter f = new FileWriter(fname);
+	                while ((s = procStdout.readLine()) != null){
+	                        System.out.println(s);
+							f.write(s+"\n");
+							result += result + "\n";
+	                }
+					f.close();
+	                procStdout.close();
+	                return result;
 	        }
 	        catch(Exception e) {	
 		            System.out.println("the exception is:"+e);
@@ -228,13 +235,15 @@ class clientInstance1 extends Thread {
 	}
 	public void run() {
 		try {
-			BufferedOutputStream out = new BufferedOutputStream(cs.getOutputStream());
+			PrintWriter out = new PrintWriter(cs.getOutputStream());
 			BufferedReader in = new BufferedReader(new InputStreamReader(cs.getInputStream()));
 			String recv = in.readLine();
 			if(recv.charAt(0) == 'Y'){
 					String result = process(recv);
-					byte[] br = (result+"\n").getBytes();
-					out.write(br, 0, br.length);
+					FileReader r = new FileReader(fname);
+					CharBuffer c = CharBuffer.allocate(50000);
+					r.read(c);
+					out.write(c.array());
 					out.flush();
 			} else {
 					processNoResult(recv);

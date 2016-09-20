@@ -1,5 +1,6 @@
 package main
 
+import b64 "encoding/base64"
 import (
 	"database/sql"
 	"encoding/json"
@@ -88,6 +89,7 @@ func sendToClient(ip string, cmd string) (bool, string){
 	cmd = cmd + "\n"
 	servAddr := ip+ ":" +clientPort
 	reply := make([]byte, 1024)
+	reply1 := ""
 	tcpAddr, err := net.ResolveTCPAddr("tcp", servAddr)
 	if err != nil {
 		println("ResolveTCPAddr failed: ", err.Error())
@@ -109,14 +111,18 @@ func sendToClient(ip string, cmd string) (bool, string){
 	}
 	if (string(bCmd[0]) == "Y") {
 		_, err = conn.Read(reply)
+		treply := string(reply)
+		reply = []byte(treply)
+		reply1 = b64.StdEncoding.EncodeToString(reply)
 	}else {
-		reply = []byte("Operation Done");
+		reply = []byte("operation done")
+		reply1 = b64.StdEncoding.EncodeToString(reply)
 	}
 	if err != nil {
 		println("Write to server failed: ", err.Error())
-		return false, ""
+		return false, string(reply1)
 	}
-	finalreply :=  strings.TrimSpace(string(reply))
+	finalreply :=  strings.TrimSpace(string(reply1))
 	println("reply from server= ", finalreply)
 	return true, finalreply
 	

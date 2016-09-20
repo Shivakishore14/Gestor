@@ -20,6 +20,7 @@
     
     
     <script type="text/javascript">
+	var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9+/=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/rn/g,"n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
 	var ips = [];
     	$(document).ready(function(){
 		reloadSys();
@@ -109,7 +110,9 @@
 			sendCmd("Y15::");
 		});
 		$("#changePassword").on("click",function(){
-			sendCmd("Y16::");
+			var a = prompt("Enter username");
+			var b = prompt("Enter password");
+			sendCmd("Y16::"+a+"::"+b);
 		});
 
     	});
@@ -143,14 +146,33 @@
 		jsonData["cmd"] = cmd;
 		var json = JSON.stringify(jsonData);
 		$.post('sendCmd/', { data:json }, function(result) {
+			$("#resultbtn").trigger("click");
     			//alert(result);
 			if (result != "NONE"){
-				alert(result);
-				//var obj = JSON.parse(result);
-				//alert (obj.ip);			
+				var obj = JSON.parse(result);
+				for ( i in obj.Reply){
+					$("#resultDisplay").append(`<h3> `+obj.Ip[i]+`</h3><hr>
+						<p>
+							` + 	Base64.decode(obj.Reply[i]).replace(/(?:\r\n|\r|\n)/g, '<br>') + `
+						</p>`);			
+
+
+					/*$("#resultDisplay").append(`<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title ">`+obj.Ip[i]+`</h3>
+						</div>
+						<div class="panel-body">
+							` + 	Base64.decode(obj.Reply[i]).replace(/(?:\r\n|\r|\n)/g, '<br />') + `
+						</div>
+					</div>`);*/
+				}
+					//alert (Base64.decode(obj.Reply[i])); str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+
+			
 			}
 		});
 	}
+	$("#resultbtn").hide();
     </script>
 
 <style type="text/css">
@@ -171,7 +193,7 @@
 	 background-color:#00BCD4; 
 	 width:100%;
 	 padding-top:35px;
-	 height: 340px;
+	 height: 380px;
 	 overflow-y: scroll;
 	}
 	#selection{
@@ -219,7 +241,13 @@
 #myModal{
 	color:#000;
 }
-
+	
+#resultDisplay{
+ color:#000;
+}
+#resultDisplay h3,p{
+	 padding-left: 30px;
+}
 	
 </style>
 
@@ -269,16 +297,15 @@
     		       	<div class="divider"></div>
     		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="chkntfs">Chkntfs</button>
     		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Change Volume Label</button>
-    		       	<div class="divider"></div>
+    		       	<!--button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">Change Volume Label</button-->
+    		       <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="driverStatus">Driver Status</button>
     		       	
     		       	
     		       	</div>
     		       	<div style="height:30px;"></div>
     		       	<div>
-    		    	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="driverStatus">Driver Status</button>
-    		       	<div class="divider"></div>
-    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="showIp">Show IP</button>
+    		    	
+    		       	
     		       	<div class="divider"></div>
 
     		       	</div>
@@ -289,7 +316,7 @@
     		    </div>
   				<div class="mdl-tabs__panel" id="panel2" style="padding-left:150px;">
   					<div style="height:30px;"></div>
-  				    <div>
+  				<div>
     		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="btnRemoteDesktop">Remote Desktop</button>
     		       	<div class="divider"></div>
     		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="netstat">Netstat</button>
@@ -301,8 +328,9 @@
     		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="label">Label</button>
     		       	<div class="divider"></div>
     		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="compact">Compact</button>
-    		       	<div class="divider"></div>
     		       	
+    		       	<div class="divider"></div>
+    		       	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="showIp">Show IP</button>
     		       	</div>
     		       	
     				
@@ -331,6 +359,15 @@
 
 	</div>
 <!-- second half ends-->
+<button id="resultbtn" data-toggle="modal" data-target=".bd-example-modal-lg"></button>
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div id="resultDisplay">
+	</div>
+    </div>
+  </div>
+</div>
 <!-- Modal -->
 	<div class="modal fade" id="myModal" role="dialog">
 		<div class="modal-dialog modal-sm">
