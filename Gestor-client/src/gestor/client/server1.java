@@ -7,6 +7,7 @@ import java.nio.CharBuffer;
 import java.util.*;
 
 public class server1 extends Thread{
+	public static int port = 1111;
 	public void run() {
 		ServerSocket ss = null;
 		Socket cs ;
@@ -27,6 +28,7 @@ public class server1 extends Thread{
 	}
 }
 class clientInstance1 extends Thread {
+	
 	protected Socket cs;
 
 	public String getStoredData(String choice) {
@@ -172,7 +174,7 @@ class clientInstance1 extends Thread {
 			}
 			if (a[0].equals("N1")){
 				//code to shutdown i.e logoff current user (01::)	
-				cmd = "cmd /c shutdown";
+				cmd = "cmd /c shutdown -p";
 				executeCmd(cmd);
 			}
 			if (a[0].equals("N2")){
@@ -184,6 +186,10 @@ class clientInstance1 extends Thread {
 			if (a[0].equals("N3")){
 				//code to reboot
 				cmd = "cmd /c shutdown -r";
+				executeCmd(cmd);
+			}
+			if (a[0].equals("N4")){
+				cmd = "C:\\Gestor\\SHARE.EXE -dir="+a[1];
 				executeCmd(cmd);
 			}
 		}catch(Exception e){
@@ -207,6 +213,11 @@ class clientInstance1 extends Thread {
 		catch(Exception e) {
 			System.out.println("the exception is:"+e);
 		}	
+	}
+	private void fileShare(String dir) throws IOException{
+		
+		String execStr = "C:\\Gestor\\SHARE.EXE -dir="+dir;
+        Process proc = Runtime.getRuntime().exec(execStr);
 	}
 	private String executeCmdWithResult(String cmd) {
 	        BufferedReader procStdout;

@@ -6,7 +6,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    
+    <!-- JQuery -->
+    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+
     <title>Gestor</title>
    	<link rel="stylesheet" href="bs/css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="bs/css/bootstrap-theme.css"/>
@@ -42,7 +44,7 @@
     
 <div class="container" style="width:400px;">
     <!-- Start your project here-->
-   	<form style="margin-top:150px;margin-left:-50px;background-color:#00BCD4;">
+   	<div style="margin-top:150px;margin-left:-50px;background-color:#00BCD4;">
 		                               
 				<!--admin name-->
 		<div style="height:20px;"></div>
@@ -66,10 +68,10 @@
 			</div>                                  
 			<div style="height:20px;"></div>
 			
-		<center><button type="button" class="btn" style="background:#6E6E6E;">LogIn</button></center>
+		<center><button type="button" class="btn" style="background:#6E6E6E;" id="btnLogin">LogIn</button></center>
 			<div style="height:20px;"></div>
 			<div style="height:20px;"></div>
-	</form>
+	</div>
 </div>
 
     <!-- /Start your project here-->
@@ -77,9 +79,7 @@
 
     <!-- SCRIPTS -->
 
-    <!-- JQuery -->
-    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
-
+    
     <!-- Bootstrap tooltips -->
     <script type="text/javascript" src="js/tether.min.js"></script>
 
@@ -88,8 +88,52 @@
 
     <!-- MDB core JavaScript -->
     <script type="text/javascript" src="js/mdb.min.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
 
-
+	<div id="notification" class="container-fluid">
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4" id="notificationArea"></div>
+                <div class="col-md-4"></div>
+            </div>
+         </div>
 </body>
+<style>
+body html{
+margin:0px;
+padding:0px;
+}
+#notification{
+	height:20px;
+	position:fixed;
+	bottom:0%;
+	width:100%; 
+	display:none;
+	z-index:15;
+	opacity:0.8;
+}
+#notificationArea{
+	background-color:#222;
+	color:#FFF;
+	size:15px;
+	text-align: center;
+	border-radius: 10px 10px 0px 0px;
+	font-size: 20px;
+}
+</style>
+<script>
+	deleteCookie();
+	$("#btnLogin").on("click", function(){
+		user = $("#admin").val();
+		pass = $("#pass").val();
+		$.post("/login/",{username:user, password:pass},function(result){
+			notify(result);
+			if (result === "Logged in"){
+				setUserName(user);
+				window.location = "home.html";
+			}
+		});
+	});
+</script>
 
 </html>

@@ -5,6 +5,7 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="css/bootstrap-theme.css"/>
 	<script src="js/jquery.js"></script>
+	<script src="js/script.js"></script>
 	<script src="js/bootstrap.min.js" type="text/javascript"></script>
 
     <!--fonts-->
@@ -109,6 +110,10 @@
 		$("#compact").on("click",function(){
 			sendCmd("Y15::");
 		});
+		$("#shareDir").on("click",function(){
+			var a = prompt("Enter Directory to Share");
+			sendCmd("N4::"+a);
+		});
 		$("#changePassword").on("click",function(){
 			var a = prompt("Enter username");
 			var b = prompt("Enter password");
@@ -149,6 +154,7 @@
 			$("#resultbtn").trigger("click");
     			//alert(result);
 			if (result != "NONE"){
+				$("#resultDisplay").html('<h3>Display Flushed</h3>');
 				var obj = JSON.parse(result);
 				for ( i in obj.Reply){
 					$("#resultDisplay").append(`<h3> `+obj.Ip[i]+`</h3><hr>
@@ -173,6 +179,7 @@
 		});
 	}
 	$("#resultbtn").hide();
+	validate();
     </script>
 
 <style type="text/css">
@@ -260,7 +267,7 @@
     <div class="FirstHalf">
     		<div class="container">
                 		<div id="selection">
-         					<button id="selectall" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Select All</button>
+         					<!--button id="selectall" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Select All</button-->
          				</div>
                 <ul id="DisplayPc">
         		<li id="pc_name" class="figures" >

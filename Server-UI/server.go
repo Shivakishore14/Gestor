@@ -22,8 +22,15 @@ type sysCmd struct {
 	Cmd string   `json:"cmd"`
 }
 type clientsReply struct {
-	Ip []string `json:id`
+	Ip []string `json:ip`
 	Reply []string `json:reply`
+}
+type getSys struct {
+	Ip string `json:"ip"`
+	Name string `json:"name"`  
+}
+type getSysArr struct {
+	Array []getSys `json:"array"`
 }
 func dBData() bool {
 	db, err := sql.Open("mysql", user+":"+password+"@/"+database)
@@ -51,6 +58,17 @@ func dBData() bool {
 	}
 	return true
 }
+func deleteIp(s string) {
+	database := "gestor"
+	user := "test"
+	password := "test"
+	db, err := sql.Open("mysql", user + ":" + password + "@/" + database)
+	if err = db.Ping(); err != nil {
+		log.Fatal(err);
+	}
+	_, _ = db.Exec("Delete from clients where ip = ? ",s)
+
+}
 func sendToJava(s string) (bool, string){
 	s = s + "\n" 
 	servAddr := "localhost:4444"
@@ -61,7 +79,7 @@ func sendToJava(s string) (bool, string){
 	}
 
 	conn, err := net.DialTCP("tcp", nil, tcpAddr)
-	defer conn.Close()	
+	
 	if err != nil {
 		println("Dial failed: ", err.Error())
 		return false, ""
@@ -97,8 +115,15 @@ func sendToClient(ip string, cmd string) (bool, string){
 	}
 
 	conn, err := net.DialTCP("tcp", nil, tcpAddr)
-	defer conn.Close()	
+	if conn != nil {
+		defer conn.Close()
+	} else {
+		println("Error")
+		deleteIp(ip)
+		return true, b64.StdEncoding.EncodeToString([]byte("Connection error"))
+	}
 	if err != nil {
+		deleteIp(ip)
 		println("Dial failed: ", err.Error())
 		return false, ""
 	}
@@ -106,6 +131,7 @@ func sendToClient(ip string, cmd string) (bool, string){
 	bCmd := []byte(cmd)
 	_, err = conn.Write(bCmd)
 	if err != nil {
+		deleteIp(ip)
 		println("Write to server failed: ", err.Error())
 		return false, ""
 	}
@@ -119,8 +145,9 @@ func sendToClient(ip string, cmd string) (bool, string){
 		reply1 = b64.StdEncoding.EncodeToString(reply)
 	}
 	if err != nil {
+		deleteIp(ip)
 		println("Write to server failed: ", err.Error())
-		return false, string(reply1)
+		return false, reply1
 	}
 	finalreply :=  strings.TrimSpace(string(reply1))
 	println("reply from server= ", finalreply)
@@ -156,11 +183,92 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, a)
 }
+func getSysMobHandler(w http.ResponseWriter, r *http.Request) {
+	db, err := sql.Open("mysql", user+":"+password+"@/"+database)
+	if err = db.Ping(); err != nil {
+		log.Fatal(err)
+	}
+	var ip, name string
+	defer db.Close()
+	rows, errs := db.Query("select ip , name from clients")
+	if errs != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	
+	syslist := make([]getSys,0 ,100)
+	for rows.Next() {
+		err := rows.Scan(&ip, &name)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(ip, name)
+		g:= &getSys{Ip:ip, Name:name}
+		syslist = append(syslist, *g)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+	sysArr := &getSysArr{Array:syslist}
+	json, je:= json.Marshal(sysArr)
+	if string(json) == "{}" || je != nil {
+		fmt.Fprintf(w, "NONE")
+	}else{
+		fmt.Fprintf(w, string(json))
+	}
+}
+func isLoginValid(username string, pass string) bool {
+	database := "gestor"
+	user := "test"
+	password := "test"
+	db, err := sql.Open("mysql", user + ":" + password + "@/" + database)
+	if err = db.Ping(); err != nil {
+		log.Fatal(err);
+		return false;
+	}
+	var passwd string
+	defer db.Close()
+	row := db.QueryRow("SELECT password FROM login WHERE username=?", username)
+	e := row.Scan(&passwd)
+	if e != nil {
+		log.Println(e)
+		return false;
+	}
+	//fmt.Println("-->>"+passwd+"-->"+dob)
+	if pass ==  passwd {
+		return true;
+	}
+	return false
+}
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+	user := r.FormValue("username")
+	pass := r.FormValue("password")
+	fmt.Printf(pass +"    " + user)
+	//getDetails("14-VEC-244")
+	isValid := isLoginValid(user, pass)
+	if isValid {
+		fmt.Fprintf(w, "Logged in")	
+	}else {
+		fmt.Fprintf(w, "Not loggedin")
+	}
+}
+
 func sendHandler(w http.ResponseWriter, r *http.Request) {
 	djson := r.FormValue("data")
+	fmt.Println(djson)
+	database := "gestor"
+	user := "test"
+	password := "test"
+	db, err := sql.Open("mysql", user + ":" + password + "@/" + database)
+	if err = db.Ping(); err != nil {
+		log.Print(err);
+	}
+	defer db.Close()
 	c := sysCmd{}
 	json.Unmarshal([]byte(djson), &c)
 	reply := make([]string, 0 ,10)
+	temp := c.Ip	
 	for i:=0 ; i < len(c.Ip); i++ {
 		ip := c.Ip[i]
 		noErr, tempReply := sendToClient(ip,c.Cmd)
@@ -168,8 +276,17 @@ func sendHandler(w http.ResponseWriter, r *http.Request) {
 			tempReply = "Error connecting (Please check Logs)"
 		}
 		reply = append(reply, tempReply)
+		var t string
+		row := db.QueryRow("SELECT name FROM clients WHERE ip=?", c.Ip[i])
+		e := row.Scan(&t)
+		if e != nil {
+			log.Print(e)
+		}else {
+			temp[i] = t
+		}
 	}
-	obj := &clientsReply{Ip: c.Ip, Reply:reply}
+	
+	obj := &clientsReply{Ip: temp, Reply:reply}
 	json, _:= json.Marshal(obj)
 	if string(json) == "{}" {
 		fmt.Fprintf(w, "NONE")
@@ -182,6 +299,8 @@ func main() {
 	fs := http.FileServer(http.Dir("."))
 	http.Handle("/", fs)
 	http.HandleFunc("/getSys/", getHandler)
+	http.HandleFunc("/login/", loginHandler)
 	http.HandleFunc("/sendCmd/", sendHandler)
+	http.HandleFunc("/getSysMob/", getSysMobHandler)
 	http.ListenAndServe(":80", nil)
 }
